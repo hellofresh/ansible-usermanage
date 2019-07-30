@@ -9,6 +9,17 @@ USERVALUES = ['append', 'comment', 'createhome', 'expires', 'force',
               'keys']
 
 
+def merge_dicts(*dict_args):
+    """
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+    """
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+
+
 class UsersDB(object):
     def __init__(self, module):
         self.module = module
@@ -110,7 +121,7 @@ class UsersDB(object):
             user_status = False
 
         # Merge User and Server ( Server has precedence in this case )
-        merged_user = dict(user_definition.items() + user_server.items())
+        merged_user = merge_dicts(user_definition.items(), user_server.items())
 
         if user_status:
             merged_user.update({"state": "absent"})
@@ -130,7 +141,7 @@ class UsersDB(object):
 
     def expand_servers_extra(self, user_name):
         ## Add self.extra_server_data
-        extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name, self.extra_users_data)
+        extra_user_item = list(filter(lambda exta_user: exta_user['name'] == user_name, self.extra_users_data))
         # not empty than add
         if extra_user_item != []:
             # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
@@ -203,7 +214,7 @@ class UsersDB(object):
         :return:
         """
 
-        for username, user_options in self.users_db.iteritems():
+        for username, user_options in list(self.users_db.items()):
 
             # Check if usermanage_selected_users is set, and exclude users
             if self.selected_users:
@@ -215,7 +226,7 @@ class UsersDB(object):
             # 1-  Check for extra keys that dont translate to ansible user module
             if self.extract_extra_keys:
                 extra_user_data = None
-                for dic_key in user_options.keys():
+                for dic_key in list(user_options.keys()):
                     if dic_key not in USERVALUES:
                         # Add user and state
                         if not extra_user_data:
