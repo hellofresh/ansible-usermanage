@@ -282,7 +282,7 @@ def main():
             source_userdb=dict(default=None, required=False, type="dict"),
             teamsdb=dict(default=None, required=False, type="dict"),
             serversdb=dict(default=None, required=False, type="list"),
-            extract_extra_keys=dict(default=True, required=False),
+            extract_extra_keys=dict(default=True, required=False, type='bool'),
             usermanage_selected_users=dict(default=None, required=False),
         ),
         supports_check_mode=False
