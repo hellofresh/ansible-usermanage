@@ -142,7 +142,7 @@ def main():
             name=dict(default=None, aliases=["path"], required=True, type='list'),
             fact=dict(default="var_dir", required=False),
             databag=dict(default=False, type='bool'),
-            extract_extra_keys=dict(default=True, required=False)
+            extract_extra_keys=dict(default=True, required=False, type='bool')
         ),
         supports_check_mode=False
     )
